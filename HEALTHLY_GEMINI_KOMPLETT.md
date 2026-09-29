@@ -1002,6 +1002,16 @@ Jede Datei als eigener Codeblock, darüber eine Zeile mit dem Pfad: `### /js/cor
 | 8 | `js/app.js`, `js/screens/welcome.js`, `auth.js`, `onboarding.js`, `home.js`, `discover.js`, `recipe.js` |
 | 9 | `js/screens/cook.js`, `pantry.js`, `shopping.js`, `plan.js`, `progress.js`, `profile.js`, `js/dev/selftest.js` |
 
+**Wenn der Nutzer nur „weiter“ schreibt**, gilt automatisch, auch wenn der Chat schon sehr lang ist:
+- Du lieferst die nächste Phase bzw. setzt genau dort fort, wo du mit `⏸` aufgehört hast.
+- Jede Datei ist VOLLSTÄNDIG, ohne `// ...`, „Rest bleibt gleich“ oder „weitere Rezepte analog“. Datenlisten haben die vollen geforderten Mengen.
+- Datei-, Funktions-, Feld- und Routennamen bleiben exakt wie in dieser Spezifikation und wie in deinen bisherigen Phasen, und Imports passen zu den bereits gelieferten Dateien.
+- Weiterhin gilt: kein Framework, keine CDNs außer Google Fonts, keine Bild-URLs, keine erfundenen Backends, Speicherung nur über `js/api.js`.
+
+**Wenn der Nutzer schreibt „<Datei> ist unvollständig“ oder „<Name> passt nicht“**, gibst du genau diese Datei korrigiert und komplett neu aus und machst danach mit der offenen Phase weiter.
+
+**Wenn der Nutzer in einem neuen Chat diese Spezifikation plus bereits fertige Dateien schickt und schreibt „Phase 1 bis X sind fertig“**, liest du die Dateien, übernimmst ihre Namen und Imports exakt und machst mit Phase X+1 weiter.
+
 Nach Phase 9 lieferst du zusätzlich einen **Abschlussbericht**:
 1. Liste aller `TODO SUPABASE`/`TODO NETLIFY`-Stellen (Datei + Funktion + 1 Satz).
 2. Tabelle mit den tatsächlichen Rezeptzahlen je Kategorie aus 10.2 (selbst gezählt).
