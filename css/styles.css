@@ -289,3 +289,7 @@ html.reduce-motion .blob{display:none}
 
 .no-anim [data-stagger],.no-anim .onb-body,.no-anim .cook-body,.no-anim .hero-art{animation:none!important}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.28s}
+
+.rc-art img,.hero-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.rc-art .badge,.rc-art .heart{z-index:2}
+.hero-art{overflow:hidden}

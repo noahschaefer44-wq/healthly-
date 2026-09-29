@@ -142,7 +142,7 @@
     const mcls = pct >= 80 ? 'g' : pct >= 50 ? 'y' : '';
     const miss = s.missing || [];
     return `<article class="card rc card-i" data-stagger data-a="open-recipe" data-id="${esc(r.id)}">
-      <div class="rc-art" style="background:linear-gradient(135deg,${r.gradient[0]},${r.gradient[1]})"><span>${r.emoji}</span>
+      <div class="rc-art" style="background:linear-gradient(135deg,${r.gradient[0]},${r.gradient[1]})"><span>${r.emoji}</span>${H.imgTag(r)}
         <b class="badge ${mcls}">${pct}% da</b>
         <button class="iconbtn heart" type="button" data-a="fav" data-id="${esc(r.id)}" aria-label="Favorit" aria-pressed="${fav}">${fav ? '♥' : '♡'}</button></div>
       <div class="rc-body"><div class="rc-title">${esc(r.title)}</div>
@@ -150,9 +150,11 @@
         ${s.swaps && Object.keys(s.swaps).length ? `<div class="small good">🔁 ${esc(ing(Object.values(s.swaps)[0]).name)} statt ${esc(ing(Object.keys(s.swaps)[0]).name)}</div>` : ''}
         ${miss.length ? `<div class="small muted">fehlt: ${miss.slice(0, 2).map(x => esc(ing(x.ing).name)).join(', ')}${miss.length > 2 ? ` +${miss.length - 2}` : ''}</div>` : ''}</div></article>`;
   }
+  const imgTag = r => ((H.IMAGES || []).includes(r.id) ? `<img src="${esc((H.IMG_BASE || 'img/') + r.id + '.jpg')}" alt="${esc(r.title)}" loading="lazy" data-fb="1">` : '');
+  document.addEventListener('error', e => { if (e.target && e.target.tagName === 'IMG' && e.target.dataset.fb) e.target.remove(); }, true);
   const empty = (em, title, text, btn) => `<div class="empty"><span class="em">${em}</span><h2>${esc(title)}</h2><p>${esc(text)}</p>${btn || ''}</div>`;
   const ings = q => { q = q.trim().toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss'); if (!q) return []; const nz = s => s.toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss'); return H.INGREDIENTS.map(i => { const n = nz(i.name), idx = n.indexOf(q); return { i, s: idx === 0 ? 0 : idx > 0 ? 1 : 9 }; }).filter(x => x.s < 9).sort((a, b) => a.s - b.s || a.i.name.localeCompare(b.i.name)).slice(0, 6).map(x => x.i); };
 
   H.checkSvg = checkSvg;
-  Object.assign(H, { $, $$, esc, sleep, nf, r0, debounce, toast, fail, errText, openSheet, closeSheet, sheetRoot, confirmSheet, confetti, countUp, haptic, ring, bar, animate, checkbox, uiPrefs, savePrefs, applyPrefs, setTheme, fmtDate, fmtLong, isoWeek, setProf, targets, saveProfileSoon, recipeById, ing, catLabel, todayLog, ctx, sugFor, recipeCard, empty, searchIng: ings });
+  Object.assign(H, { $, $$, esc, sleep, nf, r0, debounce, toast, fail, errText, openSheet, closeSheet, sheetRoot, confirmSheet, confetti, countUp, haptic, ring, bar, animate, checkbox, uiPrefs, savePrefs, applyPrefs, setTheme, fmtDate, fmtLong, isoWeek, setProf, targets, saveProfileSoon, recipeById, ing, catLabel, todayLog, ctx, sugFor, recipeCard, imgTag, empty, searchIng: ings });
 })();

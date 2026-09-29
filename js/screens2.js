@@ -108,7 +108,7 @@
     const pctRow = (label, v, target, cls, unit, cap) => `<div class="macro" style="margin:8px 0"><div class="row"><span>${label}</span><b style="margin-left:auto">${nf(v)} ${unit} <span class="muted small">(${target ? r0((per[cap] / target) * 100) : 0} % Tagesziel)</span></b></div>${H.bar(target ? per[cap] / target : 0, cls)}</div>`;
     const status = x => H.isStaple(x.ing, S.profile) ? '🧂' : (rv.idx.get(x.ing) || 0) >= x.g * 0.8 ? '✅' : (rv.idx.get(x.ing) || 0) > 0 ? '◐' : '○';
     return {
-      html: H.shell(`<div class="hero-wrap"><div class="hero-art" style="background:linear-gradient(135deg,${r.gradient[0]},${r.gradient[1]})">${r.emoji}</div>
+      html: H.shell(`<div class="hero-wrap"><div class="hero-art" style="background:linear-gradient(135deg,${r.gradient[0]},${r.gradient[1]});position:relative;overflow:hidden">${r.emoji}${H.imgTag(r)}</div>
         <a class="iconbtn" style="left:12px" href="javascript:history.back()" aria-label="Zurück">‹</a><button class="iconbtn" style="right:12px" data-a="fav" data-id="${r.id}" aria-label="Favorit" aria-pressed="${fav}">${fav ? '♥' : '♡'}</button></div>
         <h1>${esc(r.title)}</h1><p>${esc(r.subtitle)}</p>
         <div class="chips"><span class="chip">⏱ ${r.prep_min + r.cook_min} Min${r.rest_min ? ` + ${r.rest_min >= 60 ? nf(r.rest_min / 60) + ' Std' : r.rest_min + ' Min'} Ruhezeit` : ''}</span><span class="chip">📊 ${{ easy: 'Einfach', medium: 'Mittel', hard: 'Anspruchsvoll' }[r.difficulty]}</span>${r.spice ? `<span class="chip">${'🌶️'.repeat(r.spice)}</span>` : ''}<span class="chip">💶 ${{ low: 'Günstig', medium: 'Normal', high: 'Teurer' }[r.cost]}</span><span class="chip">${H.CUISINE_LABEL[r.cuisine]}</span></div>
