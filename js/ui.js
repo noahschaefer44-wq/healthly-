@@ -30,7 +30,7 @@
   const fail = e => { console.error(e); toast(errText(e), { err: true }); };
   function errText(e) {
     const m = (e && e.message) || '';
-    return { invalid_credentials: 'E-Mail oder Passwort stimmt nicht.', email_exists: 'Diese E-Mail ist schon registriert.', not_signed_in: 'Bitte melde dich an.' }[m] || 'Das hat nicht geklappt. Bitte versuche es nochmal.';
+    return { invalid_credentials: 'E-Mail oder Passwort stimmt nicht.', email_exists: 'Diese E-Mail ist schon registriert.', not_signed_in: 'Bitte melde dich an.', confirm_email: 'Fast geschafft: Bitte bestätige den Link in deiner E-Mail und melde dich dann an.', email_not_confirmed: 'Bitte bestätige zuerst deine E-Mail.', rate_limit: 'Zu viele Versuche. Bitte warte kurz.' }[m] || 'Das hat nicht geklappt. Bitte versuche es nochmal.';
   }
 
   /* Sheets */

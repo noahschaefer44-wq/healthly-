@@ -1,130 +1,93 @@
-/* Healthly – EINZIGE Daten- und Auth-Schicht.
-   Aktuell Mock mit localStorage, damit die App komplett ohne Backend läuft.
-   Später wird nur diese Datei gegen Supabase getauscht (siehe TODO SUPABASE). */
+/* Healthly – EINZIGE Daten- und Auth-Schicht (Supabase).
+   Alle Nutzerdaten liegen als Dokumente in der Tabelle hl_docs (Row Level Security: jeder sieht nur seine Zeilen).
+   Ohne Supabase-Bibliothek oder mit ?local=1 nutzt die App die lokale Variante (api-local.js). */
 (function () {
-  const H = window.HD;
-  const ACC = 'healthly:accounts', SES = 'healthly:session';
-  const sleep = ms => new Promise(r => setTimeout(r, ms));
-  const latency = () => sleep(40 + Math.random() * 60);
-  const read = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
-  const write = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-  const me = () => read(SES, null);
-  const key = c => `healthly:${(me() || {}).id}:${c}`;
-  const authListeners = new Set();
-  const emit = u => authListeners.forEach(f => f(u));
-  const stamp = x => ({ ...x, id: x.id || H.uid(), user_id: (me() || {}).id, created_at: x.created_at || new Date().toISOString(), updated_at: new Date().toISOString() });
-  const need = () => { if (!me()) throw new Error('not_signed_in'); };
-  // MOCK: Passwort-Hash nur für die lokale Demo. Supabase Auth übernimmt das später.
-  async function hash(s) {
-    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('healthly:' + s));
-    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  const H = window.HD, cfg = H.config;
+  const useLocal = new URLSearchParams(location.search).get('local') === '1' || !window.supabase;
+  if (useLocal) { H.api = H.apiLocal; H.backend = 'local'; return; }
+  H.backend = 'supabase';
+  const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+  H.sb = sb;
+  const ok = ({ data, error }) => { if (error) { const e = new Error(error.message || 'db_error'); e.code = error.code; throw e; } return data; };
+  let cachedUser;
+  async function user() {
+    if (cachedUser !== undefined) return cachedUser;
+    const { data } = await sb.auth.getSession();
+    cachedUser = data.session ? { id: data.session.user.id, email: data.session.user.email } : null;
+    return cachedUser;
   }
-  function upsert(coll, item) {
-    need();
-    const a = read(key(coll), []), v = stamp(item), i = a.findIndex(q => q.id === v.id);
-    if (i < 0) a.push(v); else a[i] = { ...a[i], ...v, created_at: a[i].created_at };
-    write(key(coll), a); return v;
-  }
-  const remove = (coll, id) => { need(); write(key(coll), read(key(coll), []).filter(x => x.id !== id)); };
-  const weekOf = iso => H.mondayISO(iso);
+  sb.auth.onAuthStateChange((ev, session) => { cachedUser = session ? { id: session.user.id, email: session.user.email } : null; });
+  const me = async () => { const u = await user(); if (!u) throw new Error('not_signed_in'); return u; };
+  const stamp = (x, extra) => ({ ...x, id: x.id || H.uid(), created_at: x.created_at || new Date().toISOString(), updated_at: new Date().toISOString(), ...(extra || {}) });
 
-  const api = {
-    /* ---- Auth ---- */
-    // TODO SUPABASE: supabase.auth.signUp({ email, password })
+  async function list(coll) { const u = await me(); return ok(await sb.from('hl_docs').select('data').eq('user_id', u.id).eq('coll', coll).order('created_at')).map(r => r.data); }
+  async function listRange(coll, from, to) { const u = await me(); return ok(await sb.from('hl_docs').select('data').eq('user_id', u.id).eq('coll', coll).gte('d', from).lte('d', to).order('d')).map(r => r.data); }
+  async function put(coll, item, id) {
+    const u = await me(), v = stamp(item);
+    ok(await sb.from('hl_docs').upsert({ user_id: u.id, coll, id: id || v.id, d: v.date || null, data: v, updated_at: v.updated_at }, { onConflict: 'user_id,coll,id' }));
+    return v;
+  }
+  async function del(coll, id) { const u = await me(); ok(await sb.from('hl_docs').delete().eq('user_id', u.id).eq('coll', coll).eq('id', id)); }
+  async function toggle(coll, id) {
+    const u = await me(), r = ok(await sb.from('hl_docs').select('id').eq('user_id', u.id).eq('coll', coll).eq('id', id));
+    if (r.length) { await del(coll, id); return false; }
+    await put(coll, { id }, id); return true;
+  }
+  const errMap = m => /invalid login/i.test(m) ? 'invalid_credentials' : /not confirmed/i.test(m) ? 'email_not_confirmed' : /already registered/i.test(m) ? 'email_exists' : /rate limit/i.test(m) ? 'rate_limit' : m;
+
+  H.api = {
+    /* Auth (Supabase Auth) */
     async signUp(email, password) {
-      await latency(); email = String(email).trim().toLowerCase();
-      const a = read(ACC, []);
-      if (a.some(x => x.email === email)) throw new Error('email_exists');
-      const u = { id: H.uid(), email };
-      a.push({ ...u, password_hash: await hash(password) }); write(ACC, a); write(SES, u); emit(u);
-      return { user: u };
+      email = String(email).trim().toLowerCase();
+      const { data, error } = await sb.auth.signUp({ email, password });
+      if (error) throw new Error(errMap(error.message));
+      if (data.user && data.user.identities && data.user.identities.length === 0) throw new Error('email_exists');
+      if (!data.session) throw new Error('confirm_email');
+      cachedUser = { id: data.session.user.id, email: data.session.user.email };
+      return { user: cachedUser };
     },
-    // TODO SUPABASE: supabase.auth.signInWithPassword({ email, password })
     async signIn(email, password) {
-      await latency(); email = String(email).trim().toLowerCase();
-      const rec = read(ACC, []).find(x => x.email === email);
-      if (!rec || rec.password_hash !== await hash(password)) throw new Error('invalid_credentials');
-      const u = { id: rec.id, email: rec.email }; write(SES, u); emit(u);
-      return { user: u };
+      const { data, error } = await sb.auth.signInWithPassword({ email: String(email).trim().toLowerCase(), password });
+      if (error) throw new Error(errMap(error.message));
+      cachedUser = { id: data.session.user.id, email: data.session.user.email };
+      return { user: cachedUser };
     },
-    // TODO SUPABASE: supabase.auth.signOut()
-    async signOut() { localStorage.removeItem(SES); emit(null); },
-    // TODO SUPABASE: supabase.auth.getUser()
-    async getCurrentUser() { return me(); },
-    // TODO SUPABASE: supabase.auth.onAuthStateChange
-    onAuthChange(cb) { authListeners.add(cb); return () => authListeners.delete(cb); },
-    // TODO SUPABASE: supabase.auth.resetPasswordForEmail(email)
-    async requestPasswordReset() { await latency(); },
-    // TODO SUPABASE: Edge Function mit service role, die den Auth-User und alle Zeilen löscht
-    async deleteAccount() {
-      const u = me(); if (!u) return;
-      write(ACC, read(ACC, []).filter(x => x.id !== u.id));
-      Object.keys(localStorage).filter(k => k.startsWith(`healthly:${u.id}:`)).forEach(k => localStorage.removeItem(k));
-      localStorage.removeItem(SES); emit(null);
-    },
+    async signOut() { await sb.auth.signOut(); cachedUser = null; },
+    async getCurrentUser() { return user(); },
+    onAuthChange(cb) { const { data } = sb.auth.onAuthStateChange((ev, s) => cb(s ? { id: s.user.id, email: s.user.email } : null)); return () => data.subscription.unsubscribe(); },
+    async requestPasswordReset(email) { ok(await sb.auth.resetPasswordForEmail(String(email).trim(), { redirectTo: location.origin + location.pathname })); },
+    // Löscht alle Healthly-Daten. Das Auth-Konto bleibt bestehen, weil das Supabase-Projekt mit einer anderen App geteilt wird.
+    async deleteAccount() { const u = await me(); ok(await sb.from('hl_docs').delete().eq('user_id', u.id)); await sb.auth.signOut(); cachedUser = null; },
 
-    /* ---- Profil ---- */
-    // TODO SUPABASE: Tabelle profiles (eine Zeile pro user_id, Rest als jsonb)
-    async getProfile() { need(); await latency(); return read(key('profile'), null); },
-    async saveProfile(p) { need(); const v = { ...p, user_id: me().id, updated_at: new Date().toISOString() }; write(key('profile'), v); return v; },
+    /* Profil */
+    async getProfile() { const u = await me(); const r = ok(await sb.from('hl_docs').select('data').eq('user_id', u.id).eq('coll', 'profile').eq('id', 'me')); return r.length ? r[0].data : null; },
+    async saveProfile(p) { const u = await me(); const v = { ...p, user_id: u.id, updated_at: new Date().toISOString() }; ok(await sb.from('hl_docs').upsert({ user_id: u.id, coll: 'profile', id: 'me', d: null, data: v, updated_at: v.updated_at }, { onConflict: 'user_id,coll,id' })); return v; },
 
-    /* ---- Vorrat ---- */
-    // TODO SUPABASE: Tabelle pantry_items
-    async listPantry() { need(); return read(key('pantry'), []); },
-    async upsertPantryItem(x) { return upsert('pantry', x); },
-    async upsertPantryItems(xs) { return xs.map(x => upsert('pantry', x)); },
-    async deletePantryItem(id) { remove('pantry', id); },
+    /* Vorrat, Einkauf */
+    listPantry: () => list('pantry'), upsertPantryItem: x => put('pantry', x), async upsertPantryItems(xs) { const o = []; for (const x of xs) o.push(await put('pantry', x)); return o; }, deletePantryItem: id => del('pantry', id),
+    listShopping: () => list('shopping'), upsertShoppingItem: x => put('shopping', x), async upsertShoppingItems(xs) { const o = []; for (const x of xs) o.push(await put('shopping', x)); return o; }, deleteShoppingItem: id => del('shopping', id),
+    async clearCheckedShopping() { const u = await me(); ok(await sb.from('hl_docs').delete().eq('user_id', u.id).eq('coll', 'shopping').eq('data->>checked', 'true')); },
 
-    /* ---- Einkaufsliste ---- */
-    // TODO SUPABASE: Tabelle shopping_items
-    async listShopping() { need(); return read(key('shopping'), []); },
-    async upsertShoppingItem(x) { return upsert('shopping', x); },
-    async upsertShoppingItems(xs) { return xs.map(x => upsert('shopping', x)); },
-    async deleteShoppingItem(id) { remove('shopping', id); },
-    async clearCheckedShopping() { need(); write(key('shopping'), read(key('shopping'), []).filter(x => !x.checked)); },
+    /* Favoriten, Bewertungen, Ausgeblendet */
+    async listFavorites() { return (await list('favorites')).map(x => x.id); }, toggleFavorite: id => toggle('favorites', id),
+    async listRatings() { const o = {}; (await list('ratings')).forEach(x => { o[x.id] = x.stars; }); return o; }, async rateRecipe(id, stars) { await put('ratings', { id, stars }, id); },
+    async listBlocked() { return (await list('blocked')).map(x => x.id); }, toggleBlocked: id => toggle('blocked', id),
 
-    /* ---- Favoriten / Bewertungen / Ausgeblendet ---- */
-    // TODO SUPABASE: Tabellen favorites, ratings, blocked_recipes
-    async listFavorites() { need(); return read(key('favorites'), []); },
-    async toggleFavorite(id) { need(); let a = read(key('favorites'), []); const on = !a.includes(id); a = on ? [...a, id] : a.filter(x => x !== id); write(key('favorites'), a); return on; },
-    async listRatings() { need(); return read(key('ratings'), {}); },
-    async rateRecipe(id, stars) { need(); const x = read(key('ratings'), {}); x[id] = stars; write(key('ratings'), x); },
-    async listBlocked() { need(); return read(key('blocked'), []); },
-    async toggleBlocked(id) { need(); let a = read(key('blocked'), []); const on = !a.includes(id); a = on ? [...a, id] : a.filter(x => x !== id); write(key('blocked'), a); return on; },
+    /* Tagebuch, Gewicht */
+    logFood: x => put('food', x), deleteFoodLog: id => del('food', id), listFoodLog: (a, b) => listRange('food', a, b),
+    async logWeight(date, kg) { return put('weight', { id: date, date, kg }, date); }, listWeight: (a, b) => listRange('weight', a, b),
 
-    /* ---- Tagebuch ---- */
-    // TODO SUPABASE: Tabelle food_log
-    async logFood(x) { return upsert('food', x); },
-    async deleteFoodLog(id) { remove('food', id); },
-    async listFoodLog(from, to) { need(); return read(key('food'), []).filter(x => x.date >= from && x.date <= to); },
-
-    /* ---- Gewicht ---- */
-    // TODO SUPABASE: Tabelle weight_log (unique user_id + date)
-    async logWeight(date, kg) {
-      need(); const a = read(key('weight'), []), i = a.findIndex(x => x.date === date);
-      const v = stamp({ ...(i >= 0 ? a[i] : {}), date, kg });
-      if (i < 0) a.push(v); else a[i] = v;
-      write(key('weight'), a); return v;
-    },
-    async listWeight(from, to) { need(); return read(key('weight'), []).filter(x => x.date >= from && x.date <= to); },
-
-    /* ---- Wochenplan ---- */
-    // TODO SUPABASE: Tabelle meal_plan
-    async listMealPlan(week) { need(); return read(key('plan'), []).filter(x => weekOf(x.date) === week); },
-    async upsertMealPlanEntry(x) { return upsert('plan', x); },
-    async deleteMealPlanEntry(id) { remove('plan', id); },
+    /* Wochenplan */
+    listMealPlan: week => listRange('plan', week, H.addDays(week, 6)), upsertMealPlanEntry: x => put('plan', x), deleteMealPlanEntry: id => del('plan', id),
     async replaceMealPlanWeek(week, entries) {
-      need();
-      const all = read(key('plan'), []);
-      const kept = all.filter(x => weekOf(x.date) !== week || x.locked);
-      entries.forEach(e => kept.push(stamp(e)));
-      write(key('plan'), kept);
-      return kept.filter(x => weekOf(x.date) === week);
+      const old = await listRange('plan', week, H.addDays(week, 6)), u = await me();
+      const drop = old.filter(x => !x.locked).map(x => x.id);
+      if (drop.length) ok(await sb.from('hl_docs').delete().eq('user_id', u.id).eq('coll', 'plan').in('id', drop));
+      for (const e of entries) await put('plan', e);
+      return listRange('plan', week, H.addDays(week, 6));
     },
 
-    /* ---- KI ---- */
     // TODO NETLIFY: später POST /.netlify/functions/suggest mit dem Kontext; bis dahin immer null
     async getAiSuggestions() { return null; }
   };
-  H.api = api;
 })();

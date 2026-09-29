@@ -85,6 +85,7 @@
       const m = e.message;
       if (m === 'email_exists') err('email', 'Diese E-Mail ist schon registriert.');
       else if (m === 'invalid_credentials') err('password', 'E-Mail oder Passwort stimmt nicht.');
+      else if (m === 'confirm_email') { toast(H.errText(e)); location.hash = '#/login'; }
       else fail(e);
       H.haptic('error');
     } finally { btn.disabled = false; }
