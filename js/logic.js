@@ -249,7 +249,7 @@
   /* ---------- Vorschläge ---------- */
   const CUISINE_LABEL = {
     german: 'Deutsch', italian: 'Italienisch', mediterranean: 'Mediterran', greek: 'Griechisch', middle_eastern: 'Orientalisch',
-    indian: 'Indisch', thai: 'Thai', chinese: 'Chinesisch', japanese: 'Japanisch', mexican: 'Mexikanisch', american: 'Amerikanisch', french: 'Französisch'
+    indian: 'Indisch', thai: 'Thai', chinese: 'Chinesisch', japanese: 'Japanisch', mexican: 'Mexikanisch', american: 'Amerikanisch', french: 'Französisch', spanish: 'Spanisch'
   };
   function mainProtein(res) {
     let best = null, bg = -1;

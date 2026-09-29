@@ -8,7 +8,7 @@ Auf Netlify: Repo verbinden, Publish-Ordner `.`, kein Build-Befehl (siehe `netli
 Mit `?dev=1` läuft ein Selbsttest (Daten und Logik), das Ergebnis erscheint unten links.
 
 ## Aufbau
-- `js/data-ingredients.js`, `js/data-recipes.js`: 119 Zutaten mit Nährwerten und 67 Rezepte
+- `js/data-ingredients.js`, `js/data-recipes.js`: 126 Zutaten mit Nährwerten und 94 Rezepte
 - `js/logic.js`: Ziele, Nährwerte, Diät-Filter, Vorschläge, Wochenplan, Einkauf, Reste
 - `js/api.js`: **einzige** Datenschicht (aktuell localStorage). Später gegen Supabase tauschen (`TODO SUPABASE`) und KI-Vorschläge über Netlify Functions (`TODO NETLIFY`)
 - `js/ui.js`, `js/screens1-3.js`, `js/app.js`: Oberfläche und Router

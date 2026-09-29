@@ -280,6 +280,116 @@
     ['Hähnchen in Streifen im Öl 7 Minuten braten, herausnehmen.|7','Zucchini und Pilze 6 Minuten anbraten, Knoblauch zugeben.|6','Sahne zugießen, Hähnchen zurückgeben und 3 Minuten köcheln. Mit Parmesan, Salz und Pfeffer abschmecken.|3'],
     {sub:'Wenig Kohlenhydrate, cremig'});
 
+
+  /* ---------- WRAPS ---------- */
+  R('haehnchen-caesar-wrap','Hähnchen-Caesar-Wrap','🌯',['lunch'],'american',10,8,2,['pan','stove'],['high_protein','quick'],
+    [['wrap',120],['chicken',250],['lettuce',100],['parmesan',20],['yogurt',60],['mustard',5],['lemon',10],['garlic',3],['rapeseed_oil',8],['salt',1],['pepper',.3]],
+    ['Hähnchen in Streifen schneiden, würzen und im Öl 8 Minuten goldbraun braten.|8','Joghurt, Senf, Zitronensaft, gepressten Knoblauch und geriebenen Parmesan zum Dressing verrühren.','Wraps mit Dressing bestreichen, mit Salat und Hähnchen füllen, fest einrollen.'],
+    {sub:'Knackig, würzig und proteinreich'});
+  R('ruehrei-speck-wrap','Rührei-Speck-Wrap','🥓',['breakfast'],'american',5,8,1,['pan','stove'],['quick','high_protein'],
+    [['wrap',60],['egg',180],['bacon',30],['cheese',25],['tomato',50],['pepper',.3]],
+    ['Bacon in der Pfanne knusprig braten, herausnehmen und zerbröseln.|4','Eier verquirlen und im Speckfett 2 bis 3 Minuten cremig stocken lassen.|3','Wrap mit Rührei, Bacon, Käse und Tomatenscheiben füllen und einrollen.'],
+    {sub:'Herzhaftes Frühstück zum Mitnehmen'});
+  R('beef-burrito','Beef-Burrito','🌯',['lunch','dinner'],'mexican',15,20,2,['pot','pan','stove'],['meal_prep','leftover_friendly'],
+    [['wrap',120],['beef_mince',250],['rice',100],['kidney_beans',150],['cheese',50],['salsa',80],['cumin',2],['paprika_powder',2],['onion',60],['rapeseed_oil',10],['salt',1.5]],
+    ['Reis nach Packungsanweisung kochen.|15','Zwiebel würfeln und im Öl anbraten, Hackfleisch zugeben und krümelig braten, mit Gewürzen und Salz würzen.|8','Bohnen und Salsa unterrühren und 3 Minuten köcheln.|3','Füllung mit Reis und Käse auf die Wraps geben, einschlagen und optional kurz in der Pfanne anbraten.'],
+    {sub:'Satt, würzig und gut vorzubereiten',spice:1});
+  R('thunfisch-wrap','Thunfisch-Mais-Wrap','🐟',['lunch'],'american',10,0,2,['bowl'],['quick','no_cook','high_protein','budget'],
+    [['wrap',120],['tuna',120],['corn',60],['yogurt',50],['lettuce',60],['tomato',100],['mustard',5],['lemon',10]],
+    ['Thunfisch abtropfen und mit Mais, Joghurt, Senf und Zitronensaft vermengen.','Wraps mit Salat und Tomatenscheiben belegen.','Thunfischcreme daraufgeben, einrollen und halbieren.'],
+    {cost:'low'});
+  R('gyros-wrap-pute','Puten-Gyros-Wrap','🥙',['lunch','dinner'],'greek',15,10,2,['pan','stove'],['high_protein','quick'],
+    [['wrap',120],['turkey',300],['yogurt',100],['cucumber',120],['tomato',100],['red_onion',40],['paprika_powder',3],['oregano',1],['garlic',4],['rapeseed_oil',10],['lemon',10],['salt',1.5]],
+    ['Putenbrust in dünne Streifen schneiden und mit Paprikapulver, Oregano und Salz mischen.','Im heißen Öl 6 bis 8 Minuten kräftig braten.|7','Joghurt mit gepresstem Knoblauch, Zitronensaft und Gurkenwürfeln zum Tzatziki verrühren.','Wraps mit Fleisch, Tomate, Zwiebel und Tzatziki füllen.'],
+    {sub:'Wie vom Imbiss, nur leichter'});
+  R('quesadilla-haehnchen','Hähnchen-Quesadilla','🧀',['lunch','dinner'],'mexican',10,12,2,['pan','stove'],['quick','kid_friendly'],
+    [['wrap',120],['chicken',200],['cheese',80],['bell_pepper',100],['red_onion',40],['cumin',2],['rapeseed_oil',8],['salsa',60,'o'],['yogurt',60,'o']],
+    ['Hähnchen und Paprika in Streifen mit Kreuzkümmel im Öl 6 Minuten anbraten.|6','Eine Wrap-Hälfte mit Käse und der Füllung belegen, zuklappen.','In der trockenen Pfanne je 2 Minuten pro Seite knusprig braten.|4','Mit Salsa und Joghurt servieren.'],
+    {spice:1});
+  R('ei-salat-wrap','Ei-Salat-Wrap','🥚',['lunch'],'german',10,10,2,['pot','stove'],['budget','meal_prep'],
+    [['wrap',120],['egg',240],['yogurt',60],['mustard',5],['lettuce',60],['cucumber',100],['chives',5],['salt',1]],
+    ['Eier 9 Minuten hart kochen, abschrecken und pellen.|9','Eier grob hacken und mit Joghurt, Senf, Schnittlauch und Salz mischen.','Wraps mit Salat und Gurkenscheiben belegen, Eiersalat daraufgeben und einrollen.'],
+    {cost:'low'});
+  R('schinken-kaese-wrap','Schinken-Käse-Wrap','🌯',['lunch','snack'],'german',5,0,1,['bowl'],['quick','no_cook'],
+    [['wrap',60],['ham',60],['cheese',40],['lettuce',30],['tomato',60],['mustard',5]],
+    ['Wrap mit Senf bestreichen.','Mit Schinken, Käse, Salat und Tomate belegen.','Fest einrollen und halbieren.'],
+    {sub:'Der schnelle Klassiker'});
+
+  /* ---------- EIER ---------- */
+  R('ruehrei-tomaten','Rührei mit Tomaten und Schnittlauch','🍳',['breakfast'],'american',5,6,1,['pan','stove'],['quick'],
+    [['egg',180],['cherry_tomato',100],['butter',8],['chives',5],['bread',45],['salt',.5],['pepper',.3]],
+    ['Tomaten halbieren und in Butter 2 Minuten anbraten.|2','Verquirlte Eier dazugießen und bei mittlerer Hitze unter Rühren 2 bis 3 Minuten cremig garen.|3','Mit Schnittlauch bestreuen und mit Brot servieren.']);
+  R('tortilla-espanola','Tortilla Española','🥘',['lunch','dinner'],'spanish',15,30,3,['pan','stove'],['budget','meal_prep','leftover_friendly'],
+    [['egg',360],['potato',400],['onion',120],['olive_oil',40],['salt',2]],
+    ['Kartoffeln in dünne Scheiben, Zwiebel in Streifen schneiden und in Olivenöl bei mittlerer Hitze 15 Minuten weich garen.|15','Kartoffeln abtropfen, mit den verquirlten Eiern und Salz vermengen.','In einer Pfanne die Masse zugedeckt 6 Minuten stocken lassen.|6','Mit einem Teller wenden und weitere 4 Minuten von der anderen Seite braten.|4'],
+    {sub:'Spanisches Kartoffelomelett, warm oder kalt',cost:'low',storage:'Im Kühlschrank 3 Tage haltbar.'});
+  R('pilz-kaese-omelett','Pilz-Käse-Omelett','🍄',['breakfast','lunch'],'french',5,8,1,['pan','stove'],['quick','high_protein'],
+    [['egg',180],['mushroom',100],['cheese',30],['butter',10],['chives',5],['salt',.5]],
+    ['Pilze in Scheiben in der Hälfte der Butter 4 Minuten anbraten, herausnehmen.|4','Eier mit Salz verquirlen, in restlicher Butter bei mittlerer Hitze 2 Minuten stocken lassen.|2','Pilze und Käse darauflegen, zusammenklappen und mit Schnittlauch servieren.']);
+  R('egg-muffins','Ei-Muffins mit Spinat und Feta','🧁',['breakfast','snack'],'american',10,20,4,['oven','baking_tray'],['meal_prep','freezer','high_protein'],
+    [['egg',360],['spinach',60],['bell_pepper',100],['feta',60],['milk',60],['salt',1],['pepper',.5]],
+    ['Ofen auf 180 °C vorheizen. Paprika würfeln, Spinat grob hacken.','Eier mit Milch, Salz und Pfeffer verquirlen, Gemüse und zerbröselten Feta unterrühren.','In 8 gefettete Muffinförmchen füllen und 20 Minuten backen.|20'],
+    {sub:'8 Stück, 2 pro Portion',storage:'Im Kühlschrank 4 Tage haltbar, einfrierbar.'});
+  R('bauernfruehstueck','Bauernfrühstück','🍳',['breakfast','lunch','dinner'],'german',10,20,2,['pan','stove'],['comfort','budget'],
+    [['potato',400],['egg',240],['ham',80],['onion',80],['rapeseed_oil',15],['chives',5],['salt',1.5],['pepper',.5]],
+    ['Gekochte Kartoffeln in Scheiben schneiden und im Öl 10 Minuten knusprig braten.|10','Zwiebel und Schinkenwürfel zugeben und 4 Minuten mitbraten.|4','Eier verquirlen, darübergießen und bei kleiner Hitze 4 Minuten stocken lassen. Mit Schnittlauch servieren.|4'],
+    {sub:'Ideal für übrige Pellkartoffeln',cost:'low'});
+  R('frittata-zucchini','Zucchini-Feta-Frittata','🍳',['lunch','dinner'],'italian',10,20,2,['pan','oven','stove'],['high_protein','leftover_friendly'],
+    [['egg',300],['zucchini',250],['feta',60],['parmesan',20],['olive_oil',10],['onion',60],['salt',1]],
+    ['Ofen auf 200 °C vorheizen. Zucchini und Zwiebel in Öl in einer ofenfesten Pfanne 5 Minuten anbraten.|5','Eier mit Parmesan und Salz verquirlen, darübergießen, Feta zerbröseln.','Im Ofen 12 bis 15 Minuten backen, bis die Oberfläche goldgelb ist.|14'],
+    {sub:'Wenig Kohlenhydrate, viel Eiweiß'});
+  R('eiersalat-brot','Eiersalat-Brot','🥪',['lunch','snack'],'german',10,10,2,['pot','stove'],['budget','quick'],
+    [['egg',240],['yogurt',80],['mustard',10],['chives',5],['bread',180],['lettuce',40],['salt',.5]],
+    ['Eier 9 Minuten hart kochen, abschrecken und pellen.|9','Eier hacken und mit Joghurt, Senf, Schnittlauch und Salz vermengen.','Brot mit Salat belegen und den Eiersalat daraufgeben.'],
+    {cost:'low'});
+
+  /* ---------- FLEISCH ---------- */
+  R('haehnchen-ofen-kartoffel','Ofenhähnchen mit Kartoffeln und Paprika','🍗',['dinner'],'german',15,40,2,['oven','baking_tray'],['one_pot','high_protein','comfort'],
+    [['chicken',350],['potato',500],['bell_pepper',200],['red_onion',100],['olive_oil',25],['paprika_powder',4],['garlic',8],['oregano',1],['salt',2.5]],
+    ['Ofen auf 200 °C vorheizen. Kartoffeln in Spalten, Paprika und Zwiebel in Stücke schneiden.','Alles mit Öl, Paprikapulver, Oregano, Knoblauch und Salz mischen und auf ein Blech geben. Kartoffeln 15 Minuten vorbacken.|15','Hähnchenbrust in Stücken würzen, dazugeben und weitere 25 Minuten backen.|25'],
+    {sub:'Ein Blech, wenig Abwasch'});
+  R('rind-reis-pfanne','Rindfleisch-Reis-Pfanne','🥩',['dinner','lunch'],'chinese',10,20,2,['pan','pot','stove'],['quick','leftover_friendly'],
+    [['beef_mince',250],['rice',140],['zucchini',200],['bell_pepper',150],['soy_sauce',40],['garlic',6],['ginger',6],['rapeseed_oil',10]],
+    ['Reis kochen, ca. 15 Minuten.|15','Hackfleisch im Öl 6 Minuten krümelig braten.|6','Gemüse in Stücken, Knoblauch und Ingwer zugeben und 6 Minuten mitbraten. Mit Sojasauce ablöschen.|6','Mit dem Reis servieren.']);
+  R('hack-gemuese-lowcarb','Hackpfanne mit Zucchini und Tomaten','🥩',['dinner'],'american',10,20,2,['pan','stove'],['high_protein','quick'],
+    [['beef_mince',300],['zucchini',300],['tomato',150],['cream_cheese',60],['garlic',6],['onion',80],['paprika_powder',3],['olive_oil',10],['salt',2],['parmesan',20]],
+    ['Zwiebel und Knoblauch im Öl 3 Minuten anbraten, Hackfleisch zugeben und 6 Minuten krümelig braten.|9','Zucchini und Tomaten würfeln, mit Paprikapulver und Salz dazugeben und 6 Minuten garen.|6','Frischkäse unterrühren, mit Parmesan bestreuen.'],
+    {sub:'Wenig Kohlenhydrate, sehr sättigend'});
+  R('cheeseburger','Cheeseburger','🍔',['lunch','dinner'],'american',10,12,2,['pan','stove'],['comfort','kid_friendly'],
+    [['beef_mince',300],['bun',110],['cheese',50],['lettuce',40],['tomato',100],['red_onion',40],['mustard',10],['rapeseed_oil',5],['salt',1.5],['pepper',.5]],
+    ['Hackfleisch mit Salz und Pfeffer vermengen und zu 2 flachen Patties formen.','Patties im Öl je 4 Minuten pro Seite braten, in der letzten Minute Käse auflegen.|8','Brötchen halbieren, kurz anrösten, mit Senf, Salat, Tomate, Zwiebel und Patty belegen.'],
+    {sub:'Selbstgemacht schmeckt er am besten'});
+  R('burger-bowl','Burger-Bowl ohne Brötchen','🥗',['lunch','dinner'],'american',10,10,2,['pan','stove'],['high_protein','quick'],
+    [['beef_mince',300],['lettuce',120],['tomato',150],['cheese',50],['avocado',100],['red_onion',40],['mustard',10],['yogurt',40],['salt',1.5]],
+    ['Hackfleisch mit Salz würzen und im heißen Öl oder trocken 8 Minuten krümelig braten.|8','Salat, Tomate, Zwiebel und Avocado würfeln und in Schalen verteilen.','Hackfleisch und Käse darauf anrichten, mit Senf-Joghurt-Sauce beträufeln.'],
+    {sub:'Wenig Kohlenhydrate, alles vom Burger'});
+  R('puten-nudelpfanne','Puten-Tomaten-Nudelpfanne','🍝',['dinner'],'italian',10,25,3,['pot','pan','stove'],['meal_prep','high_protein','leftover_friendly'],
+    [['pasta',240],['turkey_mince',300],['zucchini',200],['canned_tomatoes',400],['onion',100],['garlic',6],['olive_oil',10],['oregano',1],['salt',2],['parmesan',20]],
+    ['Nudeln in Salzwasser kochen, ca. 10 Minuten.|10','Zwiebel und Knoblauch im Öl anbraten, Putenhack 6 Minuten krümelig braten.|8','Zucchiniwürfel, Tomaten und Oregano zugeben und 12 Minuten köcheln lassen.|12','Nudeln unterheben und mit Parmesan servieren.'],
+    {sub:'Leichte Bolognese-Alternative'});
+  R('schwein-champignonrahm','Schweinefilet in Champignonrahm','🍄',['dinner'],'german',10,25,2,['pan','pot','stove'],['comfort'],
+    [['pork_loin',350],['mushroom',250],['cream',100],['onion',60],['rice',140],['rapeseed_oil',10],['salt',1.5],['pepper',.5],['parsley',5]],
+    ['Reis kochen, ca. 15 Minuten.|15','Schweinefilet in Medaillons schneiden und im Öl je 3 Minuten pro Seite braten, herausnehmen.|6','Zwiebel und Pilze 5 Minuten anbraten, Sahne zugießen, 5 Minuten einkochen lassen.|10','Fleisch zurück in die Sauce geben, abschmecken, mit Petersilie und Reis servieren.'],
+    {cost:'high'});
+  R('honig-senf-haehnchen','Honig-Senf-Hähnchen mit Ofenkartoffeln','🍯',['dinner'],'german',10,35,2,['oven','baking_tray'],['high_protein','one_pot','kid_friendly'],
+    [['chicken',350],['honey',20],['mustard',20],['potato',400],['broccoli',250],['olive_oil',15],['salt',2],['garlic',6]],
+    ['Ofen auf 200 °C vorheizen. Kartoffeln in Spalten mit Öl und Salz 15 Minuten backen.|15','Hähnchen mit Honig, Senf und Knoblauch marinieren, mit Brokkoli auf das Blech geben.','Weitere 20 Minuten backen, bis das Hähnchen gar ist.|20']);
+  R('chicken-nuggets-ofen','Ofen-Chicken-Nuggets mit Süßkartoffelspalten','🍗',['dinner','lunch'],'american',15,25,2,['oven','baking_tray'],['kid_friendly','high_protein'],
+    [['chicken',350],['breadcrumbs',60],['egg',60],['flour',20],['sweet_potato',300],['olive_oil',20],['paprika_powder',2],['salt',1.5]],
+    ['Ofen auf 200 °C vorheizen. Süßkartoffel in Spalten mit der Hälfte des Öls und Salz auf ein Blech geben.','Hähnchen würfeln, erst in Mehl, dann in verquirltem Ei und zuletzt in Paniermehl mit Paprikapulver wenden.','Nuggets mit restlichem Öl beträufeln, auf ein zweites Blech legen und mit den Süßkartoffeln 25 Minuten backen, dabei einmal wenden.|25'],
+    {sub:'Knusprig ohne Fritteuse'});
+  R('spaghetti-carbonara','Spaghetti Carbonara','🍝',['dinner'],'italian',10,15,2,['pot','pan','stove'],['quick','comfort'],
+    [['pasta',200],['egg',120],['bacon',100],['parmesan',40],['pepper',1],['salt',1.5]],
+    ['Nudeln in Salzwasser al dente kochen, etwas Nudelwasser aufheben.|10','Bacon würfeln und in der Pfanne ohne Fett knusprig braten.|5','Eier mit Parmesan und Pfeffer verrühren. Pfanne vom Herd nehmen, Nudeln mit Bacon mischen, Eiermasse und einen Schuss Nudelwasser unterrühren, bis eine cremige Sauce entsteht.'],
+    {sub:'Ohne Sahne, so wie in Rom'});
+  R('chicken-fried-rice','Chicken Fried Rice','🍚',['dinner','lunch'],'chinese',10,15,2,['wok','pan','stove'],['quick','leftover_friendly','budget'],
+    [['chicken',250],['egg',120],['rice',150],['mixed_veg_frozen',200],['soy_sauce',35],['garlic',6],['ginger',5],['rapeseed_oil',15],['onion',60],['sesame_seeds',5]],
+    ['Reis kochen und abkühlen lassen, am besten vom Vortag.|15','Hähnchen würfeln und im heißen Öl 6 Minuten braten. Zwiebel, Knoblauch und Ingwer zugeben.|6','TK-Gemüse 3 Minuten mitbraten, Eier an den Rand schieben und rühren.|3','Reis und Sojasauce dazugeben, 3 Minuten braten, mit Sesam bestreuen.|3'],
+    {cost:'low'});
+  R('haehnchen-suesskartoffel-bowl','Hähnchen-Süßkartoffel-Bowl','🍠',['lunch','dinner'],'american',15,30,2,['oven','baking_tray','pan','stove'],['high_protein','meal_prep'],
+    [['chicken',300],['sweet_potato',400],['spinach',80],['avocado',100],['olive_oil',20],['paprika_powder',3],['lemon',20],['yogurt',60],['salt',2]],
+    ['Ofen auf 200 °C vorheizen. Süßkartoffelwürfel mit der Hälfte des Öls, Paprikapulver und Salz 25 Minuten backen.|25','Hähnchen würzen und im restlichen Öl 8 Minuten braten.|8','Spinat kurz mit heißen Süßkartoffeln vermengen, mit Hähnchen, Avocado und Zitronen-Joghurt anrichten.']);
+
   window.HD = window.HD || {};
   window.HD.RECIPES = out;
 })();
